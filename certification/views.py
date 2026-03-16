@@ -1,10 +1,13 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from certification.models import Certification
-from certification.serializers import CertificationSerializer
+from certification.serializers import CertificationNestedSerializer, CertificationSerializer
 from common.api import BaseDetailAPIView, BaseListCreateAPIView
-from common.utils import parse_bool
+from common.utils import get_object_or_not_found, parse_bool
 
 
 class CertificationListCreateAPIView(BaseListCreateAPIView):
@@ -62,3 +65,11 @@ class CertificationDetailAPIView(BaseDetailAPIView):
     @swagger_auto_schema(operation_summary='Soft delete certification', responses={204: 'Certification deactivated', 404: 'Certification not found'})
     def delete(self, request, pk):
         return super().delete(request, pk)
+
+
+class CertificationNestedAPIView(APIView):
+    @swagger_auto_schema(operation_summary='Retrieve certification with nested course mappings', responses={200: CertificationNestedSerializer, 404: 'Certification not found'})
+    def get(self, request, pk):
+        certification = get_object_or_not_found(Certification, pk=pk)
+        serializer = CertificationNestedSerializer(certification)
+        return Response(serializer.data, status=status.HTTP_200_OK)

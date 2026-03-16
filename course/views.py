@@ -1,10 +1,13 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from common.api import BaseDetailAPIView, BaseListCreateAPIView
-from common.utils import parse_bool
+from common.utils import get_object_or_not_found, parse_bool
 from course.models import Course
-from course.serializers import CourseSerializer
+from course.serializers import CourseNestedSerializer, CourseSerializer
 
 
 class CourseListCreateAPIView(BaseListCreateAPIView):
@@ -62,3 +65,11 @@ class CourseDetailAPIView(BaseDetailAPIView):
     @swagger_auto_schema(operation_summary='Soft delete course', responses={204: 'Course deactivated', 404: 'Course not found'})
     def delete(self, request, pk):
         return super().delete(request, pk)
+
+
+class CourseNestedAPIView(APIView):
+    @swagger_auto_schema(operation_summary='Retrieve course with nested product and certification mappings', responses={200: CourseNestedSerializer, 404: 'Course not found'})
+    def get(self, request, pk):
+        course = get_object_or_not_found(Course, pk=pk)
+        serializer = CourseNestedSerializer(course)
+        return Response(serializer.data, status=status.HTTP_200_OK)

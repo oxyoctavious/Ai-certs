@@ -73,3 +73,17 @@ curl -X POST http://127.0.0.1:8000/api/vendor-product-mappings/ \
 - CRUD endpoints are implemented with `APIView` only.
 - Delete endpoints perform soft delete by setting `is_active=False`.
 - Mapping validations prevent duplicate active pairs and multiple primary mappings for the same parent.
+
+## Bonus Features Included
+
+- Soft delete using `is_active`
+- Nested response APIs:
+  - `/api/vendors/<id>/nested/`
+  - `/api/products/<id>/nested/`
+  - `/api/courses/<id>/nested/`
+  - `/api/certifications/<id>/nested/`
+- Shared abstract base models in `common/models.py`
+- Custom object-fetch utility in `common/utils.py`
+- Seed data command with `python manage.py seed_data`
+- Unit tests for serializers and APIs with `python manage.py test`
+- Postman collection at `postman/Django Intern Assignment.postman_collection.json`

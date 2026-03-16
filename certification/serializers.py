@@ -16,3 +16,17 @@ class CertificationSerializer(serializers.ModelSerializer):
         if queryset.exists():
             raise serializers.ValidationError('Certification code must be unique.')
         return value
+
+
+class CertificationNestedSerializer(CertificationSerializer):
+    course_mappings = serializers.SerializerMethodField()
+
+    class Meta(CertificationSerializer.Meta):
+        fields = CertificationSerializer.Meta.fields + ['course_mappings']
+
+    def get_course_mappings(self, obj):
+        from course_certification_mapping.models import CourseCertificationMapping
+        from course_certification_mapping.serializers import CourseCertificationMappingSerializer
+
+        mappings = CourseCertificationMapping.objects.filter(certification=obj, is_active=True).select_related('course', 'certification').order_by('id')
+        return CourseCertificationMappingSerializer(mappings, many=True).data

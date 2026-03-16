@@ -1,0 +1,163 @@
+{
+  "info": {
+    "_postman_id": "8a9c64c1-1f2d-4d47-94ab-bdcb8b71f1a2",
+    "name": "Django Intern Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "List Vendors",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/vendors/"
+          }
+        },
+        {
+          "name": "Create Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vendor Example\",\n  \"code\": \"VENDOR-100\",\n  \"description\": \"Vendor from Postman\"\n}"
+            },
+            "url": "{{base_url}}/api/vendors/"
+          }
+        },
+        {
+          "name": "Vendor Nested",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/vendors/1/nested/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products By Vendor",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/?vendor_id=1"
+          }
+        },
+        {
+          "name": "Product Nested",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/1/nested/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "List Courses By Product",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/courses/?product_id=1"
+          }
+        },
+        {
+          "name": "Course Nested",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/courses/1/nested/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Certifications",
+      "item": [
+        {
+          "name": "List Certifications By Course",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/certifications/?course_id=1"
+          }
+        },
+        {
+          "name": "Certification Nested",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/certifications/1/nested/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mappings",
+      "item": [
+        {
+          "name": "Create Vendor Product Mapping",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor\": 1,\n  \"product\": 1,\n  \"primary_mapping\": true\n}"
+            },
+            "url": "{{base_url}}/api/vendor-product-mappings/"
+          }
+        },
+        {
+          "name": "List Product Course Mappings",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/product-course-mappings/"
+          }
+        },
+        {
+          "name": "List Course Certification Mappings",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/course-certification-mappings/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Docs",
+      "item": [
+        {
+          "name": "Swagger",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/swagger/"
+          }
+        },
+        {
+          "name": "ReDoc",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/redoc/"
+          }
+        }
+      ]
+    }
+  ]
+}

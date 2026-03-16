@@ -1,10 +1,13 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from common.api import BaseDetailAPIView, BaseListCreateAPIView
-from common.utils import parse_bool
+from common.utils import get_object_or_not_found, parse_bool
 from product.models import Product
-from product.serializers import ProductSerializer
+from product.serializers import ProductNestedSerializer, ProductSerializer
 
 
 class ProductListCreateAPIView(BaseListCreateAPIView):
@@ -62,3 +65,11 @@ class ProductDetailAPIView(BaseDetailAPIView):
     @swagger_auto_schema(operation_summary='Soft delete product', responses={204: 'Product deactivated', 404: 'Product not found'})
     def delete(self, request, pk):
         return super().delete(request, pk)
+
+
+class ProductNestedAPIView(APIView):
+    @swagger_auto_schema(operation_summary='Retrieve product with nested vendor and course mappings', responses={200: ProductNestedSerializer, 404: 'Product not found'})
+    def get(self, request, pk):
+        product = get_object_or_not_found(Product, pk=pk)
+        serializer = ProductNestedSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)

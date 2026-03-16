@@ -16,3 +16,17 @@ class VendorSerializer(serializers.ModelSerializer):
         if queryset.exists():
             raise serializers.ValidationError('Vendor code must be unique.')
         return value
+
+
+class VendorNestedSerializer(VendorSerializer):
+    product_mappings = serializers.SerializerMethodField()
+
+    class Meta(VendorSerializer.Meta):
+        fields = VendorSerializer.Meta.fields + ['product_mappings']
+
+    def get_product_mappings(self, obj):
+        from vendor_product_mapping.models import VendorProductMapping
+        from vendor_product_mapping.serializers import VendorProductMappingSerializer
+
+        mappings = VendorProductMapping.objects.filter(vendor=obj, is_active=True).select_related('vendor', 'product').order_by('id')
+        return VendorProductMappingSerializer(mappings, many=True).data

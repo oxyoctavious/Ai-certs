@@ -1,10 +1,13 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from common.api import BaseDetailAPIView, BaseListCreateAPIView
-from common.utils import parse_bool
+from common.utils import get_object_or_not_found, parse_bool
 from vendor.models import Vendor
-from vendor.serializers import VendorSerializer
+from vendor.serializers import VendorNestedSerializer, VendorSerializer
 
 
 class VendorListCreateAPIView(BaseListCreateAPIView):
@@ -62,3 +65,11 @@ class VendorDetailAPIView(BaseDetailAPIView):
     @swagger_auto_schema(operation_summary='Soft delete vendor', responses={204: 'Vendor deactivated', 404: 'Vendor not found'})
     def delete(self, request, pk):
         return super().delete(request, pk)
+
+
+class VendorNestedAPIView(APIView):
+    @swagger_auto_schema(operation_summary='Retrieve vendor with nested product mappings', responses={200: VendorNestedSerializer, 404: 'Vendor not found'})
+    def get(self, request, pk):
+        vendor = get_object_or_not_found(Vendor, pk=pk)
+        serializer = VendorNestedSerializer(vendor)
+        return Response(serializer.data, status=status.HTTP_200_OK)
