@@ -1,0 +1,10 @@
+from django.contrib import admin
+
+from course.models import Course
+
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'code', 'is_active', 'created_at', 'updated_at']
+    search_fields = ['name', 'code']
+    list_filter = ['is_active']
